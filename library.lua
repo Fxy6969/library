@@ -2095,7 +2095,9 @@ function library:init()
 						return true
 					end
 					local parent = self.options[option.dependent]
-					return parent and parent.state
+					local result = parent and parent.state
+					print("Checking dependency:", option.flag, "depends on", option.dependent, "result:", result)
+					return result
 				end
 
 				------- Options -------
