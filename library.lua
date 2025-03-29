@@ -959,7 +959,7 @@ function library:init()
 		local i = 0
 		for v in next, self.notifications do
 			utility:Tween(v.holder, "Position", newUDim2(0, 0, 0, 75 + (i * 30)), 0.15)
-			i += 1
+			i = i + 1
 		end
 	end
 
@@ -1806,7 +1806,7 @@ function library:init()
 										if currentList.multi then
 											for i, v in next, currentSelected do
 												if v == "none" then
-													continue
+													print("none")
 												end
 												newSelected[i] = v
 											end
@@ -2076,7 +2076,7 @@ function library:init()
 						option.objects.holder.Visible = shouldShow
 						if shouldShow then
 							option.objects.holder.Position = newUDim2(0, 0, 0, ySize - 15)
-							ySize += option.objects.holder.Object.Size.Y + padding
+							ySize = ySize + option.objects.holder.Object.Size.Y + padding
 						end
 					end
 
@@ -4672,7 +4672,7 @@ function library:init()
 
 				objs.topBorder.ThemeColor = v.selected and "Accent" or "Unselected Tab Background"
 
-				pos += objs.background.Size.X.Offset + 1
+				pos = pos + objs.background.Size.X.Offset + 1
 
 				v:UpdateSections()
 			end
