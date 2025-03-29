@@ -2072,15 +2072,9 @@ function library:init()
 
 					local ySize, padding = 15, 0
 					for i, option in next, self.options do
-						-- Check if option has a dependency
-						local shouldShow = true
-						if option.dependent then
-							local dependentOption = library.options[option.dependent]
-							shouldShow = dependentOption and dependentOption.state
-						end
-
-						option.objects.holder.Visible = option.enabled and shouldShow
-						if option.enabled and shouldShow then
+						local shouldShow = option.enabled and library:CheckDependencies(option)
+						option.objects.holder.Visible = shouldShow
+						if shouldShow then
 							option.objects.holder.Position = newUDim2(0, 0, 0, ySize - 15)
 							ySize += option.objects.holder.Object.Size.Y + padding
 						end
@@ -2096,11 +2090,21 @@ function library:init()
 					end
 				end
 
+				function library:CheckDependencies(option)
+					if not option.dependent then
+						return true
+					end
+					local parent = self.options[option.dependent]
+					return parent and parent.state
+				end
+
 				------- Options -------
 
 				-- // Toggle
 				function section:AddToggle(data)
 					local toggle = {
+						dependent = data.dependent,
+						section = self,
 						class = "toggle",
 						flag = data.flag,
 						text = "",
@@ -2212,10 +2216,9 @@ function library:init()
 							self.objects.background.ThemeColorOffset = bool and -55 or 0
 
 							-- Update visibility of dependent options
-							for _, option in next, library.options do
+							for _, option in pairs(library.options) do
 								if option.dependent == self.flag then
-									option.objects.holder.Visible = option.enabled and bool
-									section:UpdateOptions()
+									option.section:UpdateOptions()
 								end
 							end
 
